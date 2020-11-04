@@ -141,6 +141,7 @@ public class Patient {
 	
 	public String toString() {
 		return "Patient ID : " + patientID + "\n" +
+	           "Name : " + firstName + " " + lastName + "\n" +
 	           "Phone Number : " + phoneNumber + "\n" +
 			   "Email : " + email + "\n" +
 	           "Date of Birth : " + dateOfBirth + "\n" +

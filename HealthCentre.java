@@ -1,12 +1,151 @@
 package ca.java.group.projects;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 
 public class HealthCentre {
+	
+public static Scanner input = new Scanner(System.in);
+	
+	// print all doctors
+	public static void printDr(ArrayList<Doctor> dList) {
+		for (Doctor d : dList) {
+	    	System.out.println(d.toString());
+		}
+	}
+	
+	// print all patients
+	public static void printPatient(ArrayList<Patient> pList) {
+		for (Patient p : pList) {
+			System.out.println(p.toString());
+		}
+	}
+	
+	// asking user if they are doctor or patients
+	public static String askUser() {
+		System.out.print("Enter 'D' for doctor or 'P' for patient : ");
+		String dOrP = input.next();
+
+		while (!dOrP.equalsIgnoreCase("d") && !dOrP.equalsIgnoreCase("p")) {
+			System.err.println("Invalid input");
+			System.out.print("Enter 'D' for doctor or 'P' for patient : ");
+			dOrP = input.next();
+		}
+		return dOrP;
+	}
+	
+	// find dr from drid and returning dr
+	public static Doctor findDr(ArrayList<Doctor> dList, int yourID) {
+		for (Doctor d : dList) {
+			if (yourID == d.getDoctorId()) {
+				return d;
+			}
+		}
+		return null;
+	}
+	
+	// asking drid and returning dr
+    public static Doctor askDrId(ArrayList<Doctor> dList) {
+		printDr(dList);
+		Doctor dr = null;
+		boolean found = true;
+		do {
+			System.out.print("Enter your Doctor ID : ");
+			int yourID = input.nextInt();
+			dr = findDr(dList, yourID);
+			if (dr != null) {
+					found = false;
+				} else {
+					System.err.println("Couldn't find this Doctor ID.");
+				}
+		} while (found);
+		return dr;
+     }
+
+    // printing doctor's appointment
+    public static void printDrAppointment(Doctor doctor) {
+	   for (Appointment a : doctor.getAppointments())
+		   System.out.println(a.toString());
+    }
+    
+    //asking patients id
+    public static Patient findPatients(ArrayList<Patient> pList, int yourID) {
+		for (Patient p : pList) {
+			if (yourID == p.getPatientID()) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	// asking patient id and returning patient
+    public static Patient askPatientId(ArrayList<Patient> pList) {
+		printPatient(pList);
+		Patient patient;
+		boolean found = true;
+		do {
+			System.out.print("Enter your Patient ID : ");
+			int yourID = input.nextInt();
+			patient = findPatients(pList, yourID);
+			if (patient != null) {
+					found = false;
+				} else {
+					System.err.println("Couldn't find this Doctor ID.");
+				}
+		} while (found);
+		return patient;
+     }
+    
+    // making an appointment
+    public static Appointment makeAppoitment(ArrayList<Patient> pList, Patient patient) {
+		LocalDateTime apoDateTime = null;
+				
+				System.out.println("When would you like to make an appointment : ");
+				System.out.print("Number of year : ");
+				int year = input.nextInt();
+				System.out.print("Number of month :");
+				int month = input.nextInt();
+				System.out.print("Day of month : ");
+				int dayOfMonth = input.nextInt();
+				System.out.print("Number of hour : ");
+				int hour = input.nextInt();
+				System.out.print("Number of minute : ");
+				int minute = input.nextInt();
+				
+				apoDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
+		
+		
+    	return new Appointment(patient, apoDateTime);	
+	}
+    
+    // asking a patient which dr they want to make an appointment with
+    public static Doctor chooseDoctor(ArrayList<Doctor> dList) {
+		printDr(dList);
+		System.out.print("Enter doctor's doctor Id : ");
+		int choosenDrId = input.nextInt();
+		Doctor returnDoctor = findDr(dList, choosenDrId);
+		
+		while (returnDoctor == null) {
+			System.out.println("Couldn't find the doctor.");
+			System.out.print("Enter doctor's doctor Id : ");
+			choosenDrId = input.nextInt();
+			returnDoctor = findDr(dList, choosenDrId);
+
+		}
+		return returnDoctor;		
+	}
+    
+    // print our patient's appointment
+    public static void printPatientAppointment(Doctor doctor) {
+ 	   for (Appointment a : doctor.getAppointments())
+ 		   System.out.println(a.toString() + "With Dr. " + doctor.getFirstName() + " " + doctor.getLastName());
+    }
 
 	public static void main(String[] args) {
-        ArrayList<Patient> patients = new ArrayList<Patient>();
+		ArrayList<Patient> patients = new ArrayList<Patient>();
 		
 		Patient p1 = new Patient("Marwan", "Pace", "111-123-4567", "marwan@gmail.com", LocalDate.of(1981, 1, 2), "m");
 		Patient p2 = new Patient("Farrah", "Hook", "222-123-4567", "farrah@yahoo.ca", LocalDate.of(1985, 3, 21), "f");
@@ -29,6 +168,44 @@ public class HealthCentre {
 		patients.add(p8);
 		patients.add(p9);
 		patients.add(p10);
-	}
+		
+		ArrayList<Doctor> doctors = new ArrayList<Doctor>();
+		
+		Doctor d1 = new Doctor("Nial", "Wynn", "101-101-1010", "nial@hospital.com", "Dentist");
+		Doctor d2 = new Doctor("Alec", "Macdonald", "202-222-1010", "alec@hospital.com", "Neurosurgery");
+		Doctor d3 = new Doctor("Ameena", "Curry", "303-301-3010", "ameena@hospital.com", "Surgeon");
+		Doctor d4 = new Doctor("Noor", "", "14-401-4410", "noor/hospital.com", "Physician");
 
+		doctors.add(d1);
+		doctors.add(d2);
+		doctors.add(d3);
+		doctors.add(d4);
+		
+		Appointment a1 = new Appointment(p1, LocalDateTime.of(2020, 11, 3, 10, 00));
+		Appointment a2 = new Appointment(p3, LocalDateTime.of(2020, 12, 20, 11, 30));
+		
+		d1.addAppoitment(a1);
+		d2.addAppoitment(a2);
+		
+		// asking user if they are doctor or patient
+		String dOrP = askUser();
+		
+		if (dOrP.equalsIgnoreCase("d")) {
+			
+			Doctor doctor = askDrId(doctors);
+			printDrAppointment(doctor);
+			
+		} else if (dOrP.equalsIgnoreCase("p")){
+			
+			Patient patient = askPatientId(patients);
+			Appointment newAppointment = makeAppoitment(patients, patient);
+			Doctor choosenDoctor = chooseDoctor(doctors);
+			choosenDoctor.addAppoitment(newAppointment);
+			printPatientAppointment(choosenDoctor);
+			
+		}
+
+	}
 }
+
+

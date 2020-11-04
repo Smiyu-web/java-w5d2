@@ -8,8 +8,10 @@ public class Appointment {
 	private LocalDateTime appointmentDateTime;
 	
 	public Appointment(Patient patients, LocalDateTime appointmentDateTime) {
-		
+		setPatients(patients);
+		setAppointmentDateTime(appointmentDateTime);
 	}
+	
 	
 	public Patient getPatients() {
 		return patients;
@@ -29,6 +31,6 @@ public class Appointment {
 	
 	public String toString() {
 		return "Appointment : " + appointmentDateTime + "\n" +
-				"Patient : " + patients.toString() + "\n";
+				"Patient : " + patients.getFirstName() + " " + patients.getLastName() + "\n";
 	}
 }
